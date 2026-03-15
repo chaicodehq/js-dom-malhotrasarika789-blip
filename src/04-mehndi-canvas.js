@@ -71,22 +71,75 @@
  *   animateElement(el, [{ opacity: "0" }, { opacity: "1" }]);
  *   // => 2 (last frame applied: opacity is now "1")
  */
+/**
+ * 1️⃣ applyBaseStyle
+ */
 export function applyBaseStyle(element, color, size) {
-  // Your code here
+  if (!element) return null;
+
+  element.style.backgroundColor = color;
+  element.style.width = size + "px";
+  element.style.height = size + "px";
+  element.style.borderRadius = "50%";
+
+  return element;
 }
 
+/**
+ * 2️⃣ setPatternStyle
+ */
 export function setPatternStyle(element, styles) {
-  // Your code here
+  if (!element) return -1;
+  if (!styles || typeof styles !== "object") return 0;
+
+  let count = 0;
+  for (const prop in styles) {
+    if (styles.hasOwnProperty(prop)) {
+      element.style[prop] = styles[prop];
+      count++;
+    }
+  }
+  return count;
 }
 
+/**
+ * 3️⃣ getComputedStyles
+ */
 export function getComputedStyles(element, properties) {
-  // Your code here
+  if (!element || !Array.isArray(properties)) return null;
+
+  const result = {};
+  properties.forEach(prop => {
+    result[prop] = element.style[prop] || "";
+  });
+  return result;
 }
 
+/**
+ * 4️⃣ toggleVisibility
+ */
 export function toggleVisibility(element) {
-  // Your code here
+  if (!element) return null;
+
+  if (element.style.display === "none") {
+    element.style.display = "";
+  } else {
+    element.style.display = "none";
+  }
+  return element.style.display;
 }
 
+/**
+ * 5️⃣ animateElement
+ */
 export function animateElement(element, frames) {
-  // Your code here
+  if (!element || !Array.isArray(frames) || frames.length === 0) return -1;
+
+  const lastFrame = frames[frames.length - 1];
+  for (const prop in lastFrame) {
+    if (lastFrame.hasOwnProperty(prop)) {
+      element.style[prop] = lastFrame[prop];
+    }
+  }
+  return frames.length;
 }

@@ -78,22 +78,96 @@
  *   filterKites(container, kites, k => k.color === "Red");
  *   // => 1 (only red kites shown)
  */
+
 export function renderKiteCard(kite) {
-  // Your code here
+  if (
+    !kite ||
+    typeof kite.name !== "string" ||
+    typeof kite.color !== "string" ||
+    typeof kite.size !== "string" ||
+    typeof kite.maker !== "string" ||
+    typeof kite.image !== "string"
+  ) return null;
+
+  const card = document.createElement("div");
+  card.classList.add("kite-card");
+
+  const img = document.createElement("img");
+  img.src = kite.image;
+  img.alt = kite.name;
+  card.appendChild(img);
+
+  const h3 = document.createElement("h3");
+  h3.classList.add("kite-name");
+  h3.textContent = kite.name;
+  card.appendChild(h3);
+
+  const makerP = document.createElement("p");
+  makerP.classList.add("kite-maker");
+  makerP.textContent = `by ${kite.maker}`;
+  card.appendChild(makerP);
+
+  const infoP = document.createElement("p");
+  infoP.classList.add("kite-info");
+  infoP.textContent = `${kite.size} - ${kite.color}`;
+  card.appendChild(infoP);
+
+  return card;
 }
 
+
 export function renderGallery(container, kites) {
-  // Your code here
+  if (!container || !Array.isArray(kites)) return -1;
+
+  container.innerHTML = "";
+  let count = 0;
+
+  kites.forEach(kite => {
+    const card = renderKiteCard(kite);
+    if (card) {
+      container.appendChild(card);
+      count++;
+    }
+  });
+
+  return count;
 }
 
 export function filterKites(container, kites, filterFn) {
-  // Your code here
+  if (!container || !Array.isArray(kites) || typeof filterFn !== "function") return -1;
+
+  const filtered = kites.filter(filterFn);
+  container.innerHTML = "";
+  filtered.forEach(kite => {
+    const card = renderKiteCard(kite);
+    if (card) container.appendChild(card);
+  });
+
+  return filtered.length;
 }
 
-export function sortAndRender(container, kites, sortField, order) {
-  // Your code here
+export function sortAndRender(container, kites, sortField, order = "asc") {
+  if (!container || !Array.isArray(kites)) return [];
+
+  const copy = [...kites];
+  copy.sort((a, b) => {
+    if (a[sortField] < b[sortField]) return order === "asc" ? -1 : 1;
+    if (a[sortField] > b[sortField]) return order === "asc" ? 1 : -1;
+    return 0;
+  });
+
+  renderGallery(container, copy);
+  return copy;
 }
 
 export function renderEmptyState(container, message) {
-  // Your code here
+  if (!container) return false;
+  if (container.children.length > 0) return false;
+
+  const p = document.createElement("p");
+  p.classList.add("empty-state");
+  p.textContent = message;
+  container.appendChild(p);
+
+  return true;
 }
